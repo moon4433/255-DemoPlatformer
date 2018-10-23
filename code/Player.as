@@ -14,8 +14,10 @@
 		private var velocity:Point = new Point(1, 5);
 		
 		private const HORIZONTAL_ACCELERATION:Number = 800;
-		
 		private const HORIZONTAL_DECELERATION:Number = 800;
+		
+		private const VERTICAL_ACCELERATION:Number = 8000;
+		private const VERTICAL_DECELERATION:Number = 8000;
 		
 		public function Player() {
 			// constructor code
@@ -23,9 +25,7 @@
 		
 		public function update():void {
 			
-			if(KeyboardInput.OnKeyDown(Keyboard.SPACE)){
-				trace("jump");
-			}
+			handleJumping();
 			
 			handleWalking();
 			
@@ -54,7 +54,20 @@
 					
 					velocity.x -= HORIZONTAL_DECELERATION * Time.dt; // accelerate left
 					if(velocity.x < 0) velocity.x = 0;
+					
 				}
+			}
+			
+		}
+		
+		private function handleJumping():void {
+			
+			if(KeyboardInput.OnKeyDown(Keyboard.SPACE)){
+				//trace("jump");
+				
+				velocity.y = velocity.y - (VERTICAL_ACCELERATION * Time.dt);
+				
+				
 			}
 			
 		}

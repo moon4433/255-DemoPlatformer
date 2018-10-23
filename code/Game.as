@@ -18,6 +18,8 @@
 			
 			player.update();
 			
+			
+			KeyboardInput.update();
 		}// end game loop
 		
 		

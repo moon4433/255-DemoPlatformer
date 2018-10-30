@@ -13,20 +13,23 @@
 		private var maxSpeed: Number = 300;
 		private var velocity: Point = new Point(1, 5);
 		
-		private var maxJumpHeight: Number = y - 100;
+		private var maxJumpHeight: Number;
+		private var maxJumpHeight2: Number;
 
 		private const HORIZONTAL_ACCELERATION: Number = 800;
 		private const HORIZONTAL_DECELERATION: Number = 800;
 
-		private const VERTICAL_ACCELERATION: Number = 1600;
+		private const VERTICAL_ACCELERATION: Number = 1400;
 		private const VERTICAL_DECELERATION: Number = 1000;
 
 		private var isJumping: Boolean = false;
 		private var isDoubleJump: Boolean = false;
 		private var isJumpDone: Boolean = false;
+		private var isJumpTwoDone: Boolean = false;
 		
 		var doubleJumpReady:Boolean = false;
 		var upReleasedInAir:Boolean = false;
+		var tc:Number = 0;
 
 
 		public function Player() {
@@ -76,11 +79,17 @@
 
 		private function handleJumping(): void {
 
-
-			if (KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
+				if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
 				//trace("jump");
+				tc += 1;
+				maxJumpHeight = (y - 100);
+				maxJumpHeight2 = (y - 60)
+				}
+			else if (KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
+				//trace("jump");
+				if(tc < 2){
 				isJumping = true;
-				
+				}
 			}else{
 				isJumping = false;
 			}
@@ -110,24 +119,27 @@
 
 
 
-			if (isJumping == true && isJumpDone == false) {	
-					velocity.y -= VERTICAL_ACCELERATION * Time.dt;
-				} 
-			if(y < maxJumpHeight){
-					velocity.y += 300 * Time.dt;
+			if (isJumping == true && isJumpDone == false && isJumpTwoDone == false) {	
+					velocity.y -= (VERTICAL_ACCELERATION + 500) * Time.dt;
+				
+				}
+				
+				if(y < maxJumpHeight && isJumpDone == false){
 					isJumpDone = true;
 				}
 				
-				if(isJumping && upReleasedInAir){
-					velocity.y -= VERTICAL_ACCELERATION * Time.dt;
+				if(isJumping && upReleasedInAir && isJumpTwoDone == false){
+					velocity.y -= (VERTICAL_ACCELERATION + 500) * Time.dt;
 					doubleJumpReady = false;
-				} 
-				if(y < 100 && upReleasedInAir){
+				}else{
+					upReleasedInAir = false;
+				}
+				if(y < maxJumpHeight2 && upReleasedInAir){
 					
-					velocity.y += VERTICAL_DECELERATION * Time.dt;
 					upReleasedInAir = false;
 					
 				}
+				
 			
 		}
 
@@ -138,15 +150,17 @@
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
-				isJumping = false;
+				tc = 0;
 				isJumpDone = false;
+				isJumpTwoDone = false;
 				upReleasedInAir = false;
-				doubleJumpReady = true;
 			}
 			else if(y != ground){
 				velocity.y += VERTICAL_DECELERATION * Time.dt;
 				if(isJumping == false){
 				upReleasedInAir = true;
+					isJumpDone = true;
+					
 				}
 			}
 		}

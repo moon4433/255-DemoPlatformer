@@ -28,22 +28,25 @@
 		private var airJumpsMax:int = 1;
 		
 		private var jumpVelocity:Number = 400;
+		
+		public var collider:AABB;
 
 		public function Player() {
 			// constructor code
+		
+		collider = new AABB(width/2, height/2);
+			
+			
 		} // end constructor
 
 		public function update(): void {
 
 			handleJumping();
-
 			handleWalking();
-
 			doPhysics();
-			
-			//handleDoubleJump();
-
 			detectGround();
+			
+			collider.calcEdges(x, y);
 		}
 
 		/**

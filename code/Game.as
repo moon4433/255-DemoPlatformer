@@ -21,15 +21,25 @@
 		  *
 		  */
 		private function gameLoop(e:Event):void {
-			
 			Time.update();
-			
 			player.update();
+			
+			doCollisionDetection();
 			
 			
 			KeyboardInput.update();
 		}// end game loop
 		
+		private function doCollisionDetection():void {
+			
+			if(player.collider.checkOverlap(platform.collider)){
+				platform.alpha = .5;
+			}else{
+				platform.alpha = 1;
+			}
+			
+			
+		}
 		
 	}// end game class
 	

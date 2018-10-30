@@ -9,7 +9,7 @@
 
 
 
-		private var gravity: Point = new Point(0, 100);
+		private var gravity: Point = new Point(0, 1000);
 		private var maxSpeed: Number = 300;
 		private var velocity: Point = new Point(1, 5);
 		
@@ -19,18 +19,15 @@
 		private const HORIZONTAL_ACCELERATION: Number = 800;
 		private const HORIZONTAL_DECELERATION: Number = 800;
 
-		private const VERTICAL_ACCELERATION: Number = 1400;
-		private const VERTICAL_DECELERATION: Number = 1000;
-
-		private var isJumping: Boolean = false;
-		private var isDoubleJump: Boolean = false;
-		private var isJumpDone: Boolean = false;
-		private var isJumpTwoDone: Boolean = false;
+		private var isGrounded:Boolean = false;
+		/**
+		 *whether the player is moving upward in a jump, this effects gravity.
+		 */
+		private var isJumping:Boolean = false;
+		private var airJumpsLeft:int = 1;
+		private var airJumpsMax:int = 1;
 		
-		var doubleJumpReady:Boolean = false;
-		var upReleasedInAir:Boolean = false;
-		var tc:Number = 0;
-
+		private var jumpVelocity:Number = 400;
 
 		public function Player() {
 			// constructor code
@@ -43,8 +40,6 @@
 			handleWalking();
 
 			doPhysics();
-
-			handleJump();
 			
 			//handleDoubleJump();
 
@@ -79,27 +74,35 @@
 
 		private function handleJumping(): void {
 
-				if (KeyboardInput.OnKeyDown(Keyboard.SPACE) && KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
+				if (KeyboardInput.OnKeyDown(Keyboard.SPACE)) {
 				//trace("jump");
-				tc += 1;
-				maxJumpHeight = (y - 100);
-				maxJumpHeight2 = (y - 60)
-				}
-			else if (KeyboardInput.IsKeyDown(Keyboard.SPACE)) {
-				//trace("jump");
-				if(tc < 2){
-				isJumping = true;
-				}
-			}else{
-				isJumping = false;
-			}
-			
-		}
+				// apply an impulse up
+					if(isGrounded){
+					velocity.y = -jumpVelocity;
+					isGrounded = false;
+					isJumping = true;
+					}else{ //in air, attempting to double jump
+						if(airJumpsLeft > 0){ // if we have air jumps left:
+						velocity.y = -jumpVelocity; // air jump
+						airJumpsLeft--;
+						isJumping = true;
+						}
+					}
+			     }
+				 
+				 if(!KeyboardInput.IsKeyDown(Keyboard.SPACE)) isJumping = false;
+				 if(velocity.y > 0) isJumping = false;
+		     }
 
 		private function doPhysics(): void {
+			
+			var gravityMultiplyier:Number = 1;
+			
+			if(!isJumping) gravityMultiplyier = 2;
+			
 			// apply gravity to velocity
-			velocity.x += gravity.x * Time.dt;
-			velocity.y += gravity.y * Time.dt;
+			//velocity.x += gravity.x * Time.dt * gravityMultiplyier;
+			velocity.y += gravity.y * Time.dt * gravityMultiplyier;
 
 			// constrain to maxSpeed
 			if (velocity.x > maxSpeed) velocity.x = maxSpeed; // clamp going right
@@ -115,34 +118,6 @@
 
 		}
 
-		private function handleJump(): void {
-
-
-
-			if (isJumping == true && isJumpDone == false && isJumpTwoDone == false) {	
-					velocity.y -= (VERTICAL_ACCELERATION + 500) * Time.dt;
-				
-				}
-				
-				if(y < maxJumpHeight && isJumpDone == false){
-					isJumpDone = true;
-				}
-				
-				if(isJumping && upReleasedInAir && isJumpTwoDone == false){
-					velocity.y -= (VERTICAL_ACCELERATION + 500) * Time.dt;
-					doubleJumpReady = false;
-				}else{
-					upReleasedInAir = false;
-				}
-				if(y < maxJumpHeight2 && upReleasedInAir){
-					
-					upReleasedInAir = false;
-					
-				}
-				
-			
-		}
-
 
 		private function detectGround(): void {
 			// look at y position
@@ -150,20 +125,11 @@
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
-				tc = 0;
-				isJumpDone = false;
-				isJumpTwoDone = false;
-				upReleasedInAir = false;
+				airJumpsLeft = airJumpsMax;
+				isGrounded = true;
 			}
-			else if(y != ground){
-				velocity.y += VERTICAL_DECELERATION * Time.dt;
-				if(isJumping == false){
-				upReleasedInAir = true;
-					isJumpDone = true;
-					
-				}
 			}
-		}
+		
 
 
 	} // end class

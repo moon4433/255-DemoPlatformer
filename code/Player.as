@@ -10,7 +10,7 @@
 
 
 		private var gravity: Point = new Point(0, 1000);
-		private var maxSpeed: Number = 300;
+		private var maxSpeed: Number = 200;
 		private var velocity: Point = new Point(1, 5);
 		
 		private var maxJumpHeight: Number;
@@ -31,6 +31,8 @@
 		
 		public var collider:AABB;
 
+
+
 		public function Player() {
 			// constructor code
 		
@@ -39,14 +41,18 @@
 			
 		} // end constructor
 
+		/**
+		  *
+		  */
 		public function update(): void {
-
-			handleJumping();
-			handleWalking();
-			doPhysics();
-			detectGround();
+			handleJumping(); // this handles if the player jumps or not
+			handleWalking(); // this handles if the player goes left or right
+			doPhysics(); // makes the player act as if gravity was being applied
+			collider.calcEdges(x, y); // this consantly calculates the edges for the players AABB
 			
-			collider.calcEdges(x, y);
+			//detectGround(); // this is so player wont fall off screen for testing
+			
+			isGrounded = false; // this allows us to walk off of edges and no longer be "on the ground"
 		}
 
 		/**
@@ -121,16 +127,32 @@
 
 		}
 
-
 		private function detectGround(): void {
 			// look at y position
-			var ground: Number = 360;
+			var ground: Number = 390;
 			if (y > ground) {
 				y = ground; // clamp
 				velocity.y = 0;
 				airJumpsLeft = airJumpsMax;
 				isGrounded = true;
 			}
+			}
+			
+			public function applyFix(fix:Point):void {
+				if(fix.x != 0){
+					x += fix.x;
+					velocity.x = 0;
+				}
+				if(fix.y != 0){
+					y += fix.y;
+					velocity.y = 0;
+				}
+				if(fix.y < 0){ // we moved the player UP, so they are on the ground
+					airJumpsLeft = airJumpsMax;
+					isGrounded = true;
+				}
+				collider.calcEdges(x, y);
+				
 			}
 		
 

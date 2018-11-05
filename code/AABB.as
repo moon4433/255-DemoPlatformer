@@ -1,4 +1,5 @@
 ﻿package code {
+	import flash.geom.Point;
 	
 	public class AABB {
 		
@@ -49,6 +50,36 @@
 			
 			return true;
 		}
+		
+		/**
+		  * This function calculates how far to move THIS box so that it no longer
+		  * intersects another AABB.
+		  * @param other The other AABB.
+		  * @return The "fix" vector - how far to move this box.
+		  */
+		public function findOverlapFix(other:AABB):Point{
+			
+			var moveL:Number = other.xmin - this.xmax; // calculates if is shorter distance to move left
+			var moveR:Number = other.xmax - this.xmin; // calculates if is shorter distance to move right
+			var moveU:Number = other.ymin - this.ymax; // calculates if is shorter distance to move up
+			var moveD:Number = other.ymax - this.ymin; // calculates if is shorter distance to move down
+			
+			var fix:Point = new Point(); // creates a new vector
+			
+			fix.x = (Math.abs(moveL) < Math.abs(moveR)) ? moveL : moveR; // determins if it is shorter to move left or right
+			fix.y = (Math.abs(moveU) < Math.abs(moveD)) ? moveU : moveD; // determins if it is shorter to move up or down
+			
+			if(Math.abs(fix.x) < Math.abs(fix.y)) { // if x is less than y
+				fix.y = 0; 
+			}
+			else {
+				fix.x = 0;
+			}
+			
+			return fix;
+			
+		}
+		
 
 	}
 	

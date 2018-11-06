@@ -1,23 +1,36 @@
 ﻿package code {
 	import flash.geom.Point;
 	
+	/**
+	  * This is the AABB class which holds functions for AABB collision
+      */
 	public class AABB {
 		
-		private var halfWidth:Number;
-		private var halfHeight:Number;
+		private var halfWidth:Number; // empty variable to hold half width
+		private var halfHeight:Number; // empty variable to hold half height
 		
-		public var xmin:Number;
-		public var xmax:Number;
-		public var ymin:Number;
-		public var ymax:Number;
+		public var xmin:Number; // empty variable to hold the x min
+		public var xmax:Number; // empty variable to hold the x max
+		public var ymin:Number; // empty variable to hold the y min
+		public var ymax:Number; // empty variable to hold the y max
 
+		/**
+		  * This is the constructor function of the AABB class
+		  * @param halfWidth passes in a number to be the center x position
+		  * @param halfHeight passes in a number to be the center y position
+		  */
 		public function AABB(halfWidth:Number, halfHeight:Number) {
-			setSize(halfWidth, halfHeight);
+			setSize(halfWidth, halfHeight); // sets AABB to objects halfheight and halfwidth
 		}
 		
+		/**
+		  * This function is to handle setting the height and width of the bounding Box
+		  * @param halfWidth passes in a number to be the center x position
+		  * @param halfHeight passes in a number to be the center y position
+		  */
 		public function setSize(halfWidth:Number, halfHeight:Number):void {
-			this.halfWidth = halfWidth;
-			this.halfHeight = halfHeight;
+			this.halfWidth = halfWidth; // sets the half width of the specific object
+			this.halfHeight = halfHeight; // sets the half height of the specific object
 			
 			// recalculate edges!!!!!!!!!!!
 			calcEdges((xmin + xmax)/2, (ymin + ymax)/2);

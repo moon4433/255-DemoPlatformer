@@ -12,7 +12,7 @@
 
 
 
-		private var gravity: Point = new Point(0, 1000); // sets force of gravity for the player
+		private var gravity: Point = new Point(0, 800); // sets force of gravity for the player
 		private var maxSpeed: Number = 200; // cap for how fast the player can move left or right
 		private var velocity: Point = new Point(1, 5); // how far player can move left or right per frame
 		
@@ -28,7 +28,7 @@
 		private var airJumpsLeft:int = 1; // how many jumps a player has
 		private var airJumpsMax:int = 1; // how many extra jumps can player do
 		
-		private var jumpVelocity:Number = 400; // adds an impulse to the players "upward" velocity
+		private var jumpVelocity:Number = 350; // adds an impulse to the players "upward" velocity
 		
 		public var collider:AABB;// variable holds an AABB collider
 

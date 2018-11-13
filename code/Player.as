@@ -19,7 +19,7 @@
 		private var maxJumpHeight: Number; // empty variable to hold the max jump height
 		private var maxJumpHeight2: Number; // empty variable to hold the second max jump height
 
-		private const HORIZONTAL_ACCELERATION: Number = 800; // how fast the player can move left or right
+		private const HORIZONTAL_ACCELERATION: Number = 700; // how fast the player can move left or right
 		private const HORIZONTAL_DECELERATION: Number = 800; // this is to fake friction for player
 
 		private var isGrounded:Boolean = false; // is the player on the ground
